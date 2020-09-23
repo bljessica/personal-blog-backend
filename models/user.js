@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    id: {
-        type: Number,
-        unique: true,
-        required: true
-    },
     phone: {
         type: String,
         unique: true,
@@ -25,4 +20,4 @@ const userSchema = new mongoose.Schema({
     }
 })
  
-module.exports.User = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);
