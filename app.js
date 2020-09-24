@@ -10,9 +10,23 @@ app.use(bodyParser.urlencoded({extended: false}));//解析表单数据
 //连接数据库
 db.connect();
 
+//设置跨域访问
+app.all('*', (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token");
+    res.setHeader("Access-Control-Expose-Headers", "*");
+
+    if (req.method == "OPTIONS") {
+        res.sendStatus(200);
+        return;
+    }
+    next();
+})
+
 //挂载路由
 app.use('/user', user);
-
 
 app.listen(3000, () => {
     console.log('服务器运行在localhost:3000');

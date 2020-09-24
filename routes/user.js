@@ -8,8 +8,8 @@ const { respondMsg } = require('../utils/response');
 //     res.send(JSON.stringify({code: 0}));
 // })
 
-//存储用户
-router.post('/addUser', (req, res) => {
+//用户注册
+router.post('/register', (req, res) => {
     let obj = req.body;
     User.findOne({phone: obj.phone})
         .then(user => {
@@ -34,6 +34,28 @@ router.post('/addUser', (req, res) => {
             respondMsg(res, 1, '注册失败');
             console.log(err);
             return;
+        })
+})
+
+//登录验证
+router.post('/login', (req, res) => {
+    let obj = req.body;
+    User.findOne({phone: obj.phone})
+        .then(user => {
+            if(!user) {
+                respondMsg(res, 1, '此手机号未注册');
+                return;
+            }
+            else {
+                if(md5(obj.password) == user.password) {
+                    respondMsg(res, 0, '登陆成功');
+                    return;
+                }
+                else {
+                    respondMsg(res, 1, '密码错误');
+                    return;
+                }
+            }
         })
 })
 
