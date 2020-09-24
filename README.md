@@ -4,6 +4,7 @@
 ## 技术
 + nodejs结合express框架
 + mongodb数据库
++ 配置CORS解决跨域问题
 
 ## 运行
 ```
