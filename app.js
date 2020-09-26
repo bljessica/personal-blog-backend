@@ -4,8 +4,8 @@ const db = require('./utils/dbcon')
 const user = require('./routes/user')
 const app = express();
 
-app.use(bodyParser.json());//解析json数据格式
-app.use(bodyParser.urlencoded({extended: false}));//解析表单数据
+app.use(bodyParser.json({limit: '1mb'}));//解析json数据格式
+app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));//解析表单数据
 
 //连接数据库
 db.connect();
