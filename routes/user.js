@@ -60,6 +60,7 @@ router.get('/getUserInfo', (req, res) => {
         .then(user => {
             if(user) {
                 respondMsg(res, 0, '查询成功', {
+                    userID: user._id,
                     phone: user.phone,
                     nickname: user.nickname,
                     avatarUrl: user.avatarUrl
