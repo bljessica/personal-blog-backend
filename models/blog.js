@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { LABELS, KINDS } = require('../consts/const');
 
-const noteSchema = new mongoose.Schema({
+const blogSchema = new mongoose.Schema({
     userID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
@@ -36,4 +36,4 @@ const noteSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Note', noteSchema);
+module.exports = mongoose.model('Blog', blogSchema);

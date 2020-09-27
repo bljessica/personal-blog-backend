@@ -2,12 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const User = require('../models/user');
-const Note = require('../models/blog');
+const Blog = require('../models/blog');
 const { respondMsg } = require('../utils/response');
 const router = express.Router();
 
 //新增笔记 
-router.post('/addNote', (req, res) => {
+router.post('/addBlog', (req, res) => {
     let obj = req.body;
     let userID = mongoose.Types.ObjectId(obj.userID);
     //是否有此用户
@@ -15,14 +15,14 @@ router.post('/addNote', (req, res) => {
         .then(user => {
             //存在此用户
             if(user) {
-                Note.create({
+                Blog.create({
                     userID: userID,
                     title: obj.title,
                     content: obj.content,
                     kind: obj.kind,
                     labels: obj.labels,
                 }).then(resObj => {
-                    respondMsg(res, 0, '成功添加笔记');
+                    respondMsg(res, 0, '成功添加博客');
                 }).catch(err => {
                     respondMsg(res, 1, '查询失败');
                     console.log(err);
@@ -37,17 +37,17 @@ router.post('/addNote', (req, res) => {
         })
 })
 
-//获取用户的所有笔记
-router.post('/getNotes', (req, res) => {
+//获取用户的所有博客
+router.post('/getBlogs', (req, res) => {
     let obj = req.body;
     let userID = mongoose.Types.ObjectId(obj.userID);
     User.findOne({_id: userID})
         .then(user => {
             if(user) {
-                Note.find({userID: userID}).sort({updated: 1})
-                    .then(notes => {
+                Blog.find({userID: userID}).sort({updated: 1})
+                    .then(blogs => {
                         let data = [];
-                        notes.forEach(item => {
+                        blogs.forEach(item => {
                             data.push({
                                 title: item.title,
                                 content: item.content,
@@ -70,10 +70,10 @@ router.post('/getNotes', (req, res) => {
 })
 
 //获取所有用户的所有笔记
-router.get('/getAllNotes', (req, res) => {
-    Note.find({}).then(notes => {
+router.get('/getAllBlogs', (req, res) => {
+    Blog.find({}).then(blogs => {
         let data = [];
-        notes.forEach(item => {
+        blogs.forEach(item => {
             data.push({
                 title: item.title,
                 content: item.content,
