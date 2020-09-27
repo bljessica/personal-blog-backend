@@ -6,7 +6,7 @@ const Blog = require('../models/blog');
 const { respondMsg } = require('../utils/response');
 const router = express.Router();
 
-//新增笔记 
+//新增博客
 router.post('/addBlog', (req, res) => {
     let obj = req.body;
     let userID = mongoose.Types.ObjectId(obj.userID);
@@ -69,7 +69,7 @@ router.post('/getBlogs', (req, res) => {
         })
 })
 
-//获取所有用户的所有笔记
+//获取所有用户的所有博客
 router.get('/getAllBlogs', (req, res) => {
     Blog.find({}).then(blogs => {
         let data = [];
