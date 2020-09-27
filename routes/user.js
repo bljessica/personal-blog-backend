@@ -27,6 +27,7 @@ router.post('/register', (req, res) => {
         .catch(err => {
             respondMsg(res, 1, '注册失败');
             console.log(err);
+            return;
         })
 })
 
@@ -50,6 +51,7 @@ router.post('/login', (req, res) => {
         .catch(err => {
             respondMsg(res, 1, '查询失败');
             console.log(err);
+            return;
         })
 })
 
@@ -73,6 +75,7 @@ router.get('/getUserInfo', (req, res) => {
         .catch(err => {
             respondMsg(res, 1, '查询失败');
             console.log(err);
+            return;
         })
 })
 
@@ -99,6 +102,7 @@ router.post('/saveUserInfo', (req, res) => {
         .catch(err => {
             respondMsg(res, 1, '查询失败');
             console.log(err);
+            return;
         })
 })
 

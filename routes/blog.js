@@ -4,6 +4,7 @@ const moment = require('moment');
 const User = require('../models/user');
 const Blog = require('../models/blog');
 const { respondMsg } = require('../utils/response');
+const { LABELS } = require('../consts/const');
 const router = express.Router();
 
 //新增博客
@@ -34,6 +35,7 @@ router.post('/addBlog', (req, res) => {
         }).catch(err => {
             respondMsg(res, 1, '查询失败');
             console.log(err);
+            return;
         })
 })
 
@@ -87,7 +89,58 @@ router.get('/getAllBlogs', (req, res) => {
     }).catch(err => {
         respondMsg(res, 1, '查询失败');
         console.log(err);
+        return;
     })
+})
+
+//获取拥有某标签的所有博客
+router.get('/getBlogsByLabel', (req, res) => {
+    let obj = req.query;
+    Blog.find({labels: obj.label})
+        .then(blogs => {
+            let data = [];
+            blogs.forEach(item => {
+                data.push({
+                    title: item.title,
+                    content: item.content,
+                    kind: item.kind,
+                    labels: item.labels,
+                    created: moment(item.created).format('YYYY-MM-DD HH:mm'),
+                    updated: moment(item.updated).format('YYYY-MM-DD HH:mm')
+                })
+            });
+            respondMsg(res, 0, '查询成功', data);
+        }).catch(err => {
+            respondMsg(res, 1, '查询失败');
+            console.log(err);
+            return;
+        })
+})
+
+//获取所有标签和对应博客个数
+router.get('/getAllLabels', (req, res) => {
+    let data = [];
+    for(let i = 0; i < LABELS.length; i++){
+        Blog.find({labels: LABELS[i]})
+            .then(blogs => {
+                let num = 0;
+                blogs.forEach(item => {
+                    num++;
+                });
+                data.push({
+                    name: LABELS[i],
+                    num: num
+                });
+                if(i == LABELS.length - 1) {
+                    respondMsg(res, 0, '查询成功', data);
+                }
+            }).catch(err => {
+                respondMsg(res, 1, '查询失败');
+                console.log(err);
+                return;
+            });
+    }
+    
 })
 
 module.exports = router;
