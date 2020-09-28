@@ -51,6 +51,7 @@ router.post('/getBlogs', (req, res) => {
                         let data = [];
                         blogs.forEach(item => {
                             data.push({
+                                blogID: item._id,
                                 title: item.title,
                                 content: item.content,
                                 kind: item.kind,
@@ -77,6 +78,7 @@ router.get('/getAllBlogs', (req, res) => {
         let data = [];
         blogs.forEach(item => {
             data.push({
+                blogID: item._id,
                 title: item.title,
                 content: item.content,
                 kind: item.kind,
@@ -101,6 +103,7 @@ router.get('/getBlogsByLabel', (req, res) => {
             let data = [];
             blogs.forEach(item => {
                 data.push({
+                    blogID: item._id,
                     title: item.title,
                     content: item.content,
                     kind: item.kind,
@@ -141,6 +144,31 @@ router.get('/getAllLabels', (req, res) => {
             });
     }
     
+})
+
+//获取某类型的所有博客
+router.get('/getLabelsByKind', (req, res) => {
+    let obj = req.query;
+    Blog.find({kind: obj.kind})
+        .then(blogs => {
+            let data = [];
+            blogs.forEach(item => {
+                data.push({
+                blogID: item._id,
+                title: item.title,
+                content: item.content,
+                kind: item.kind,
+                labels: item.labels,
+                created: moment(item.created).format('YYYY-MM-DD HH:mm'),
+                updated: moment(item.updated).format('YYYY-MM-DD HH:mm')
+                })
+            })
+            respondMsg(res, 0, '查询成功', data);
+        }).catch(err => {
+            respondMsg(res, 1, '查询失败');
+            console.log(err);
+            return;
+        })
 })
 
 module.exports = router;
