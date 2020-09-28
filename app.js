@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const db = require('./utils/dbcon')
 const user = require('./routes/user')
 const blog = require('./routes/blog');
+const comment = require('./routes/comment');
 const app = express();
 
 app.use(bodyParser.json({limit: '1mb'}));//解析json数据格式
@@ -29,6 +30,7 @@ app.all('*', (req, res, next) => {
 //挂载路由
 app.use('/user', user);
 app.use('/blog', blog);
+app.use('/comment', comment);
 
 app.listen(3000, () => {
     console.log('服务器运行在localhost:3000');
