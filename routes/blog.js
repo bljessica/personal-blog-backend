@@ -147,7 +147,7 @@ router.get('/getAllLabels', (req, res) => {
 })
 
 //获取某类型的所有博客
-router.get('/getLabelsByKind', (req, res) => {
+router.get('/getBlogsByKind', (req, res) => {
     let obj = req.query;
     Blog.find({kind: obj.kind})
         .then(blogs => {
@@ -169,6 +169,51 @@ router.get('/getLabelsByKind', (req, res) => {
             console.log(err);
             return;
         })
+});
+
+//获取某博客所有信息
+router.get('/getBlog', (req, res) => {
+    let obj = req.query;
+    Blog.findOne({_id: mongoose.Types.ObjectId(obj.id)})
+        .then(blog => {
+            respondMsg(res, 0, '查询成功', {
+                blogID: blog._id,
+                title: blog.title,
+                content: blog.content,
+                kind: blog.kind,
+                labels: blog.labels,
+                created: moment(blog.created).format('YYYY-MM-DD HH:mm'),
+                updated: moment(blog.updated).format('YYYY-MM-DD HH:mm')
+            });
+        }).catch(err => {
+            respondMsg(res, 1, '查询失败');
+            console.log(err);
+            return;
+        })
 })
 
+//搜索
+router.get('/search', (req, res) => {
+    let obj = req.query;
+    Blog.find({content: {$regex: '/' + obj.content +'/'}})
+        .then(blogs => {
+            let data = [];
+            blogs.forEach(item => {
+                data.push({
+                blogID: item._id,
+                title: item.title,
+                content: item.content,
+                kind: item.kind,
+                labels: item.labels,
+                created: moment(item.created).format('YYYY-MM-DD HH:mm'),
+                updated: moment(item.updated).format('YYYY-MM-DD HH:mm')
+                })
+            })
+            respondMsg(res, 0, '查询成功', data);
+        }).catch(err => {
+            respondMsg(res, 1, '查询失败');
+            console.log(err);
+            return;
+        });
+})
 module.exports = router;
