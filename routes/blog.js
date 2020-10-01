@@ -98,6 +98,10 @@ router.get('/getAllBlogs', (req, res) => {
 //获取拥有某标签的所有博客
 router.get('/getBlogsByLabel', (req, res) => {
     let obj = req.query;
+    if(!obj.label) {
+        respondMsg(res, 1, '未传递label');
+        return;
+    }
     Blog.find({labels: obj.label})
         .then(blogs => {
             let data = [];
@@ -149,6 +153,10 @@ router.get('/getAllLabels', (req, res) => {
 //获取某类型的所有博客
 router.get('/getBlogsByKind', (req, res) => {
     let obj = req.query;
+    if(!obj.kind) {
+        respondMsg(res, 1, '未传递kind');
+        return;
+    }
     Blog.find({kind: obj.kind})
         .then(blogs => {
             let data = [];
@@ -174,6 +182,10 @@ router.get('/getBlogsByKind', (req, res) => {
 //获取某博客所有信息
 router.get('/getBlog', (req, res) => {
     let obj = req.query;
+    if(!obj.id) {
+        respondMsg(res, 1, '未传递id');
+        return;
+    }
     Blog.findOne({_id: mongoose.Types.ObjectId(obj.id)})
         .then(blog => {
             respondMsg(res, 0, '查询成功', {
@@ -192,10 +204,10 @@ router.get('/getBlog', (req, res) => {
         })
 })
 
-//搜索
+//搜索 
 router.get('/search', (req, res) => {
     let obj = req.query;
-    Blog.find({content: {$regex: '/' + obj.content +'/'}})
+    Blog.find({content: {$regex: obj.content}})
         .then(blogs => {
             let data = [];
             blogs.forEach(item => {
@@ -216,4 +228,5 @@ router.get('/search', (req, res) => {
             return;
         });
 })
+
 module.exports = router;
