@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Collection = require('../models/collection');
 const { respondMsg } = require('../utils/response');
@@ -6,6 +7,7 @@ const { respondMsg } = require('../utils/response');
 //收藏
 router.post('/collect', (req, res) => {
     let obj = req.body;
+    // console.log(obj)
     Collection.findOne({userID: obj.userID, blogID: obj.blogID})
         .then(collection => {
             if(collection) {
@@ -56,5 +58,8 @@ router.post('/cancelCollection', (req, res) => {
             return;
         });
 });
+
+//某题是否收藏
+
 
 module.exports = router;
