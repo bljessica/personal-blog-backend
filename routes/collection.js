@@ -42,7 +42,7 @@ router.post('/cancelCollection', (req, res) => {
                 return;
             }
             else {
-                Collection.remove({userID: obj.userID, blogID: obj.blogID})
+                Collection.deleteOne({userID: obj.userID, blogID: obj.blogID})
                     .then(() => {
                         respondMsg(res, 0, '成功取消收藏');
                         return;
@@ -60,6 +60,25 @@ router.post('/cancelCollection', (req, res) => {
 });
 
 //某题是否收藏
-
+router.post('/isCollected', (req, res) => {
+    let obj = req.body;
+    Collection.findOne({userID: obj.userID, blogID: obj.blogID})
+        .then(collection => {
+            if(collection) {
+                respondMsg(res, 0, '查询成功', {
+                    isCollected: true
+                });
+            }
+            else {
+                respondMsg(res, 0, '查询成功', {
+                    isCollected: false
+                });
+            }
+        }).catch(err => {
+            respondMsg(res, 1, '操作失败');
+            console.log(err);
+            return;
+        })
+})
 
 module.exports = router;
