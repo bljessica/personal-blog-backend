@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const User = require('../models/user');
 const Blog = require('../models/blog');
+const Collection = require('../models/collection');
 const { respondMsg } = require('../utils/response');
 const { LABELS } = require('../consts/const');
 const router = express.Router();
@@ -222,6 +223,44 @@ router.get('/search', (req, res) => {
                 })
             })
             respondMsg(res, 0, '查询成功', data);
+        }).catch(err => {
+            respondMsg(res, 1, '查询失败');
+            console.log(err);
+            return;
+        });
+})
+
+//获取所以收藏过的题目
+router.post('/getCollectedBlogs', (req, res) => {
+    let obj = req.body;
+    Blog.find({userID: obj.userID})
+        .then(blogs => {
+            let data = [];
+            blogs.forEach((blog, index) => {
+                Collection.findOne({userID: obj.userID, blogID: blog._id})
+                    .then(collection => {
+                        if(collection) {
+                            data.push({
+                                blogID: blog._id,
+                                title: blog.title,
+                                content: blog.content,
+                                kind: blog.kind,
+                                labels: blog.labels,
+                                created: moment(blog.created).format('YYYY-MM-DD HH:mm'),
+                                updated: moment(blog.updated).format('YYYY-MM-DD HH:mm')
+                            });
+                        }
+                        if(index == blogs.length - 1) {
+                            respondMsg(res, 0, '查询成功', data);
+                            return;
+                        }
+                    }).catch(err => {
+                        respondMsg(res, 1, '查询失败');
+                        console.log(err);
+                        return;
+                    });
+            });
+            
         }).catch(err => {
             respondMsg(res, 1, '查询失败');
             console.log(err);
