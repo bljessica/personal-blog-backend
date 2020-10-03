@@ -230,7 +230,7 @@ router.get('/search', (req, res) => {
         });
 })
 
-//获取所以收藏过的题目
+//获取所有收藏过的题目
 router.post('/getCollectedBlogs', (req, res) => {
     let obj = req.body;
     Blog.find({userID: obj.userID})
